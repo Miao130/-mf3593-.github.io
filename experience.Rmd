@@ -4,8 +4,10 @@ output:
   html_document:
     toc: true
     toc_float: true
-    theme: cerulean
 ---
+Hi, I am a first year Master's student at Columbia University Mailman School of Public Health studying Biostatistics.
 
-[Resume](Miao Fu Resume.pdf)
-
+If you want to know more about my professional experience, here is my resume:
+[Resume](Miao Fu Resume.pdf)\
+Here is my linkedln:
+[Linkedln](https://www.linkedin.com/in/miaofu/)

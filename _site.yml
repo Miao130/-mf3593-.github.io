@@ -1,0 +1,14 @@
+name: "Miao Fu"
+output_dir: "."
+navbar:
+  title: "Home"
+  right:
+    - text: "About"
+      href: experience.html
+    - icon: fa-envelope fa-lg
+      href: mailto:<mfu0860@gmail.com>
+    - icon: fa-github fa-lg
+      href: http://github.com/Miao130/
+output:
+  html_document:
+    theme: cerulean

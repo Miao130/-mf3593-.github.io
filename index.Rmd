@@ -4,10 +4,12 @@ output:
   html_document:
     toc: true
     toc_float: true
-    theme: cerulean
 ---
 
-## This is Miao's webpage
+![](https://gifdb.com/images/high/hello-madagascar-penguin-7pernnlu5b6aad3y.gif)
 
-## Experience
-[Experience](experience.html)
+This is Miao Fu's webpage. It has information about Miao's professional experience and a dashboard to navigate “The Instacart Online Grocery Shopping Dataset 2017”.
+
+# About ME
+[Professional experience](experience.html)
+
