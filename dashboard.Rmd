@@ -1,0 +1,63 @@
+---
+title: "Dashboard"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    vertical_layout: fill
+    embed: source
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(p8105.datasets)
+data("ny_noaa")
+cleaned_noaa=ny_noaa|>
+  na.omit()|>
+  filter(date>="2002-01-01"&date<="2007-01-01")|>
+  separate(date,c("year","month","day"),sep="-")
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Chart A
+
+```{r}
+cleaned_noaa|>
+  group_by(year,month)|>
+  summarise(prcp_avg=round(mean(prcp),2))|>
+  mutate(month=as.numeric(month),
+         text_label=str_c("month: ",month,"\nprecipitation: ",prcp_avg))|>
+  plot_ly(
+    x=~month,y=~prcp_avg,type="scatter",mode="markers",color=~year,text=~text_label
+  )
+```
+
+Column {data-width=350}
+-----------------------------------------------------------------------
+
+### Chart B
+
+```{r}
+cleaned_noaa |> 
+  filter(year==2002)|> 
+  group_by(year,month)|>
+  summarise(snwd_avg=mean(snwd))|>
+  plot_ly(x=~month,y = ~snwd_avg, color = ~month, type = "bar", colors = "viridis")
+
+```
+
+### Chart C
+
+```{r}
+cleaned_noaa|>
+  mutate(temp=0.1*(as.numeric(tmax)-as.numeric(tmin)))|>
+  select(year,month,day,temp)|>
+  group_by(year,month)|>
+  summarise(temp_avg=round(mean(temp),2))|>
+  mutate(text_label=str_c("month: ",month,"\ntemp difference: ",temp_avg,"°C"))|>
+  plot_ly(x=~month, y= ~temp_avg, type="scatter", mode="lines", color=~year,text=~text_label)
+```
+

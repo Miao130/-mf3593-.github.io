@@ -9,9 +9,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
-<meta name="author" content="Miao Fu" />
 
-<meta name="date" content="2023-10-29" />
 
 <title>plot</title>
 
@@ -31,9 +29,19 @@
        h6 {font-size: 12px;}
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
+<script src="site_libs/jqueryui-1.13.2/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
 <script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/plotly-binding-4.10.3/plotly.js"></script>
+<script src="site_libs/typedarray-0.1/typedarray.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet" />
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+<link href="site_libs/plotly-htmlwidgets-css-2.11.1/plotly-htmlwidgets.css" rel="stylesheet" />
+<script src="site_libs/plotly-main-2.11.1/plotly-latest.min.js"></script>
 <link href="site_libs/font-awesome-6.4.2/css/all.min.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-6.4.2/css/v4-shims.min.css" rel="stylesheet" />
 
@@ -223,6 +231,69 @@ $(document).ready(function () {
 
 
 
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+
 
 </head>
 
@@ -230,6 +301,16 @@ $(document).ready(function () {
 
 
 <div class="container-fluid main-container">
+
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
 
 
 
@@ -256,6 +337,9 @@ $(document).ready(function () {
   <a href="plot.html">Plots</a>
 </li>
 <li>
+  <a href="dashboard.html">Dashboard</a>
+</li>
+<li>
   <a href="mailto:&lt;mfu0860@gmail.com&gt;">
     <span class="fa fa-envelope fa-lg"></span>
      
@@ -277,16 +361,53 @@ $(document).ready(function () {
 
 
 <h1 class="title toc-ignore">plot</h1>
-<h4 class="author">Miao Fu</h4>
-<h4 class="date">2023-10-29</h4>
 
 </div>
 
 
+<pre class="r"><code>data(&quot;ny_noaa&quot;)
+cleaned_noaa=ny_noaa|&gt;
+  na.omit()|&gt;
+  filter(date&gt;=&quot;2002-01-01&quot;&amp;date&lt;=&quot;2007-01-01&quot;)|&gt;
+  separate(date,c(&quot;year&quot;,&quot;month&quot;,&quot;day&quot;),sep=&quot;-&quot;)
+
+cleaned_noaa|&gt;
+  group_by(year,month)|&gt;
+  summarise(prcp_avg=round(mean(prcp),2))|&gt;
+  mutate(month=as.numeric(month),
+         text_label=str_c(&quot;month: &quot;,month,&quot;\nprecipitation: &quot;,prcp_avg))|&gt;
+  plot_ly(
+    x=~month,y=~prcp_avg,type=&quot;scatter&quot;,mode=&quot;markers&quot;,color=~year,text=~text_label
+  )</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d14d1992944fa8ad87a0" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-d14d1992944fa8ad87a0">{"x":{"visdat":{"920e7f2f4848":["function () ","plotlyVisDat"]},"cur_data":"920e7f2f4848","attrs":{"920e7f2f4848":{"x":{},"y":{},"mode":"markers","text":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"month"},"yaxis":{"domain":[0,1],"automargin":true,"title":"prcp_avg"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":[1,2,3,4,5,6,7,8,9,10,11,12],"y":[18.829999999999998,19.640000000000001,28.300000000000001,34.020000000000003,42.409999999999997,45.5,16.829999999999998,24.350000000000001,40.020000000000003,38.039999999999999,34.850000000000001,33.719999999999999],"mode":"markers","text":["month: 1<br />precipitation: 18.83","month: 2<br />precipitation: 19.64","month: 3<br />precipitation: 28.3","month: 4<br />precipitation: 34.02","month: 5<br />precipitation: 42.41","month: 6<br />precipitation: 45.5","month: 7<br />precipitation: 16.83","month: 8<br />precipitation: 24.35","month: 9<br />precipitation: 40.02","month: 10<br />precipitation: 38.04","month: 11<br />precipitation: 34.85","month: 12<br />precipitation: 33.72"],"type":"scatter","name":"2002","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12],"y":[22.399999999999999,26.460000000000001,24.719999999999999,22.02,37.920000000000002,40.829999999999998,38.549999999999997,39.100000000000001,47.460000000000001,42.43,36.859999999999999,37.5],"mode":"markers","text":["month: 1<br />precipitation: 22.4","month: 2<br />precipitation: 26.46","month: 3<br />precipitation: 24.72","month: 4<br />precipitation: 22.02","month: 5<br />precipitation: 37.92","month: 6<br />precipitation: 40.83","month: 7<br />precipitation: 38.55","month: 8<br />precipitation: 39.1","month: 9<br />precipitation: 47.46","month: 10<br />precipitation: 42.43","month: 11<br />precipitation: 36.86","month: 12<br />precipitation: 37.5"],"type":"scatter","name":"2003","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12],"y":[19.039999999999999,14.279999999999999,20.870000000000001,34.740000000000002,43.270000000000003,24.75,51.280000000000001,46.789999999999999,54.130000000000003,18.34,27.149999999999999,33.329999999999998],"mode":"markers","text":["month: 1<br />precipitation: 19.04","month: 2<br />precipitation: 14.28","month: 3<br />precipitation: 20.87","month: 4<br />precipitation: 34.74","month: 5<br />precipitation: 43.27","month: 6<br />precipitation: 24.75","month: 7<br />precipitation: 51.28","month: 8<br />precipitation: 46.79","month: 9<br />precipitation: 54.13","month: 10<br />precipitation: 18.34","month: 11<br />precipitation: 27.15","month: 12<br />precipitation: 33.33"],"type":"scatter","name":"2004","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12],"y":[34.600000000000001,20.68,25.48,39.270000000000003,13.68,29.93,31.48,31.399999999999999,29.920000000000002,74.700000000000003,38.780000000000001,24.129999999999999],"mode":"markers","text":["month: 1<br />precipitation: 34.6","month: 2<br />precipitation: 20.68","month: 3<br />precipitation: 25.48","month: 4<br />precipitation: 39.27","month: 5<br />precipitation: 13.68","month: 6<br />precipitation: 29.93","month: 7<br />precipitation: 31.48","month: 8<br />precipitation: 31.4","month: 9<br />precipitation: 29.92","month: 10<br />precipitation: 74.7","month: 11<br />precipitation: 38.78","month: 12<br />precipitation: 24.13"],"type":"scatter","name":"2005","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1,2,3,4,5,6,7,8,9,10,11,12],"y":[34.299999999999997,18.550000000000001,14.19,29.34,29.989999999999998,59.719999999999999,43.369999999999997,36.920000000000002,38.75,51.079999999999998,31.199999999999999,24.800000000000001],"mode":"markers","text":["month: 1<br />precipitation: 34.3","month: 2<br />precipitation: 18.55","month: 3<br />precipitation: 14.19","month: 4<br />precipitation: 29.34","month: 5<br />precipitation: 29.99","month: 6<br />precipitation: 59.72","month: 7<br />precipitation: 43.37","month: 8<br />precipitation: 36.92","month: 9<br />precipitation: 38.75","month: 10<br />precipitation: 51.08","month: 11<br />precipitation: 31.2","month: 12<br />precipitation: 24.8"],"type":"scatter","name":"2006","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"line":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":[1],"y":[101.42],"mode":"markers","text":"month: 1<br />precipitation: 101.42","type":"scatter","name":"2007","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"line":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>cleaned_noaa |&gt; 
+  filter(year==2002)|&gt; 
+  group_by(year,month)|&gt;
+  summarise(snwd_avg=mean(snwd))|&gt;
+  plot_ly(x=~month,y = ~snwd_avg, color = ~month, type = &quot;bar&quot;, colors = &quot;viridis&quot;)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-ffd8d2832426be6b30e4" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-ffd8d2832426be6b30e4">{"x":{"visdat":{"920e7932b033":["function () ","plotlyVisDat"]},"cur_data":"920e7932b033","attrs":{"920e7932b033":{"x":{},"y":{},"color":{},"colors":"viridis","alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"bar"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"month","type":"category","categoryorder":"array","categoryarray":["01","02","03","04","05","06","07","08","09","10","11","12"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"snwd_avg"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["01"],"y":[107.64669421487604],"type":"bar","name":"01","marker":{"color":"rgba(68,1,84,1)","line":{"color":"rgba(68,1,84,1)"}},"textfont":{"color":"rgba(68,1,84,1)"},"error_y":{"color":"rgba(68,1,84,1)"},"error_x":{"color":"rgba(68,1,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["02"],"y":[57.931114551083589],"type":"bar","name":"02","marker":{"color":"rgba(72,33,115,1)","line":{"color":"rgba(72,33,115,1)"}},"textfont":{"color":"rgba(72,33,115,1)"},"error_y":{"color":"rgba(72,33,115,1)"},"error_x":{"color":"rgba(72,33,115,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["03"],"y":[33.659566915157967],"type":"bar","name":"03","marker":{"color":"rgba(67,62,133,1)","line":{"color":"rgba(67,62,133,1)"}},"textfont":{"color":"rgba(67,62,133,1)"},"error_y":{"color":"rgba(67,62,133,1)"},"error_x":{"color":"rgba(67,62,133,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["04"],"y":[3.6272189349112427],"type":"bar","name":"04","marker":{"color":"rgba(56,89,140,1)","line":{"color":"rgba(56,89,140,1)"}},"textfont":{"color":"rgba(56,89,140,1)"},"error_y":{"color":"rgba(56,89,140,1)"},"error_x":{"color":"rgba(56,89,140,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["05"],"y":[0.14652014652014653],"type":"bar","name":"05","marker":{"color":"rgba(45,112,142,1)","line":{"color":"rgba(45,112,142,1)"}},"textfont":{"color":"rgba(45,112,142,1)"},"error_y":{"color":"rgba(45,112,142,1)"},"error_x":{"color":"rgba(45,112,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["06"],"y":[0],"type":"bar","name":"06","marker":{"color":"rgba(37,133,142,1)","line":{"color":"rgba(37,133,142,1)"}},"textfont":{"color":"rgba(37,133,142,1)"},"error_y":{"color":"rgba(37,133,142,1)"},"error_x":{"color":"rgba(37,133,142,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["07"],"y":[0],"type":"bar","name":"07","marker":{"color":"rgba(30,155,138,1)","line":{"color":"rgba(30,155,138,1)"}},"textfont":{"color":"rgba(30,155,138,1)"},"error_y":{"color":"rgba(30,155,138,1)"},"error_x":{"color":"rgba(30,155,138,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["08"],"y":[0],"type":"bar","name":"08","marker":{"color":"rgba(43,176,127,1)","line":{"color":"rgba(43,176,127,1)"}},"textfont":{"color":"rgba(43,176,127,1)"},"error_y":{"color":"rgba(43,176,127,1)"},"error_x":{"color":"rgba(43,176,127,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["09"],"y":[0],"type":"bar","name":"09","marker":{"color":"rgba(81,196,106,1)","line":{"color":"rgba(81,196,106,1)"}},"textfont":{"color":"rgba(81,196,106,1)"},"error_y":{"color":"rgba(81,196,106,1)"},"error_x":{"color":"rgba(81,196,106,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["10"],"y":[0.12080335731414868],"type":"bar","name":"10","marker":{"color":"rgba(133,213,74,1)","line":{"color":"rgba(133,213,74,1)"}},"textfont":{"color":"rgba(133,213,74,1)"},"error_y":{"color":"rgba(133,213,74,1)"},"error_x":{"color":"rgba(133,213,74,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["11"],"y":[19.124592538935168],"type":"bar","name":"11","marker":{"color":"rgba(194,223,35,1)","line":{"color":"rgba(194,223,35,1)"}},"textfont":{"color":"rgba(194,223,35,1)"},"error_y":{"color":"rgba(194,223,35,1)"},"error_x":{"color":"rgba(194,223,35,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["12"],"y":[139.09070796460176],"type":"bar","name":"12","marker":{"color":"rgba(253,231,37,1)","line":{"color":"rgba(253,231,37,1)"}},"textfont":{"color":"rgba(253,231,37,1)"},"error_y":{"color":"rgba(253,231,37,1)"},"error_x":{"color":"rgba(253,231,37,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
+<pre class="r"><code>cleaned_noaa|&gt;
+  mutate(temp=0.1*(as.numeric(tmax)-as.numeric(tmin)))|&gt;
+  select(year,month,day,temp)|&gt;
+  group_by(year,month)|&gt;
+  summarise(temp_avg=round(mean(temp),2))|&gt;
+  mutate(text_label=str_c(&quot;month: &quot;,month,&quot;\ntemp difference: &quot;,temp_avg,&quot;°C&quot;))|&gt;
+  plot_ly(x=~month, y= ~temp_avg, type=&quot;scatter&quot;, mode=&quot;lines&quot;, color=~year,text=~text_label)</code></pre>
+<pre><code>## `summarise()` has grouped output by &#39;year&#39;. You can
+## override using the `.groups` argument.</code></pre>
+<div class="plotly html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d99734001f5437d1ac1c" style="width:672px;height:480px;"></div>
+<script type="application/json" data-for="htmlwidget-d99734001f5437d1ac1c">{"x":{"visdat":{"920e6ece226e":["function () ","plotlyVisDat"]},"cur_data":"920e6ece226e","attrs":{"920e6ece226e":{"x":{},"y":{},"mode":"lines","text":{},"color":{},"alpha_stroke":1,"sizes":[10,100],"spans":[1,20],"type":"scatter"}},"layout":{"margin":{"b":40,"l":60,"t":25,"r":10},"xaxis":{"domain":[0,1],"automargin":true,"title":"month","type":"category","categoryorder":"array","categoryarray":["01","02","03","04","05","06","07","08","09","10","11","12"]},"yaxis":{"domain":[0,1],"automargin":true,"title":"temp_avg"},"hovermode":"closest","showlegend":true},"source":"A","config":{"modeBarButtonsToAdd":["hoverclosest","hovercompare"],"showSendToCloud":false},"data":[{"x":["01","02","03","04","05","06","07","08","09","10","11","12"],"y":[8.5199999999999996,11.68,11,11.9,12.24,12.1,12.619999999999999,13.029999999999999,13.08,9.7699999999999996,8.0199999999999996,8.7799999999999994],"mode":"lines","text":["month: 01<br />temp difference: 8.52°C","month: 02<br />temp difference: 11.68°C","month: 03<br />temp difference: 11°C","month: 04<br />temp difference: 11.9°C","month: 05<br />temp difference: 12.24°C","month: 06<br />temp difference: 12.1°C","month: 07<br />temp difference: 12.62°C","month: 08<br />temp difference: 13.03°C","month: 09<br />temp difference: 13.08°C","month: 10<br />temp difference: 9.77°C","month: 11<br />temp difference: 8.02°C","month: 12<br />temp difference: 8.78°C"],"type":"scatter","name":"2002","marker":{"color":"rgba(102,194,165,1)","line":{"color":"rgba(102,194,165,1)"}},"textfont":{"color":"rgba(102,194,165,1)"},"error_y":{"color":"rgba(102,194,165,1)"},"error_x":{"color":"rgba(102,194,165,1)"},"line":{"color":"rgba(102,194,165,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["01","02","03","04","05","06","07","08","09","10","11","12"],"y":[9.3699999999999992,10.31,12.869999999999999,11.960000000000001,11.4,10.789999999999999,11.41,10.859999999999999,10.94,10.94,9.5399999999999991,8.7200000000000006],"mode":"lines","text":["month: 01<br />temp difference: 9.37°C","month: 02<br />temp difference: 10.31°C","month: 03<br />temp difference: 12.87°C","month: 04<br />temp difference: 11.96°C","month: 05<br />temp difference: 11.4°C","month: 06<br />temp difference: 10.79°C","month: 07<br />temp difference: 11.41°C","month: 08<br />temp difference: 10.86°C","month: 09<br />temp difference: 10.94°C","month: 10<br />temp difference: 10.94°C","month: 11<br />temp difference: 9.54°C","month: 12<br />temp difference: 8.72°C"],"type":"scatter","name":"2003","marker":{"color":"rgba(252,141,98,1)","line":{"color":"rgba(252,141,98,1)"}},"textfont":{"color":"rgba(252,141,98,1)"},"error_y":{"color":"rgba(252,141,98,1)"},"error_x":{"color":"rgba(252,141,98,1)"},"line":{"color":"rgba(252,141,98,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["01","02","03","04","05","06","07","08","09","10","11","12"],"y":[9.0600000000000005,11.369999999999999,10.07,11.15,12.57,11.94,10.19,10.289999999999999,11.300000000000001,10.220000000000001,9.6699999999999999,9.1699999999999999],"mode":"lines","text":["month: 01<br />temp difference: 9.06°C","month: 02<br />temp difference: 11.37°C","month: 03<br />temp difference: 10.07°C","month: 04<br />temp difference: 11.15°C","month: 05<br />temp difference: 12.57°C","month: 06<br />temp difference: 11.94°C","month: 07<br />temp difference: 10.19°C","month: 08<br />temp difference: 10.29°C","month: 09<br />temp difference: 11.3°C","month: 10<br />temp difference: 10.22°C","month: 11<br />temp difference: 9.67°C","month: 12<br />temp difference: 9.17°C"],"type":"scatter","name":"2004","marker":{"color":"rgba(141,160,203,1)","line":{"color":"rgba(141,160,203,1)"}},"textfont":{"color":"rgba(141,160,203,1)"},"error_y":{"color":"rgba(141,160,203,1)"},"error_x":{"color":"rgba(141,160,203,1)"},"line":{"color":"rgba(141,160,203,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["01","02","03","04","05","06","07","08","09","10","11","12"],"y":[9.4199999999999999,11.109999999999999,10.43,13.69,12.390000000000001,12.199999999999999,11.65,11.869999999999999,12.74,8.8200000000000003,10.92,7.8499999999999996],"mode":"lines","text":["month: 01<br />temp difference: 9.42°C","month: 02<br />temp difference: 11.11°C","month: 03<br />temp difference: 10.43°C","month: 04<br />temp difference: 13.69°C","month: 05<br />temp difference: 12.39°C","month: 06<br />temp difference: 12.2°C","month: 07<br />temp difference: 11.65°C","month: 08<br />temp difference: 11.87°C","month: 09<br />temp difference: 12.74°C","month: 10<br />temp difference: 8.82°C","month: 11<br />temp difference: 10.92°C","month: 12<br />temp difference: 7.85°C"],"type":"scatter","name":"2005","marker":{"color":"rgba(231,138,195,1)","line":{"color":"rgba(231,138,195,1)"}},"textfont":{"color":"rgba(231,138,195,1)"},"error_y":{"color":"rgba(231,138,195,1)"},"error_x":{"color":"rgba(231,138,195,1)"},"line":{"color":"rgba(231,138,195,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["01","02","03","04","05","06","07","08","09","10","11","12"],"y":[9.4299999999999997,9.3800000000000008,10.26,13.16,12.220000000000001,10.449999999999999,11.02,11.24,10.16,10.31,8.8900000000000006,8.3499999999999996],"mode":"lines","text":["month: 01<br />temp difference: 9.43°C","month: 02<br />temp difference: 9.38°C","month: 03<br />temp difference: 10.26°C","month: 04<br />temp difference: 13.16°C","month: 05<br />temp difference: 12.22°C","month: 06<br />temp difference: 10.45°C","month: 07<br />temp difference: 11.02°C","month: 08<br />temp difference: 11.24°C","month: 09<br />temp difference: 10.16°C","month: 10<br />temp difference: 10.31°C","month: 11<br />temp difference: 8.89°C","month: 12<br />temp difference: 8.35°C"],"type":"scatter","name":"2006","marker":{"color":"rgba(166,216,84,1)","line":{"color":"rgba(166,216,84,1)"}},"textfont":{"color":"rgba(166,216,84,1)"},"error_y":{"color":"rgba(166,216,84,1)"},"error_x":{"color":"rgba(166,216,84,1)"},"line":{"color":"rgba(166,216,84,1)"},"xaxis":"x","yaxis":"y","frame":null},{"x":["01"],"y":[8.8399999999999999],"mode":"lines","text":"month: 01<br />temp difference: 8.84°C","type":"scatter","name":"2007","marker":{"color":"rgba(255,217,47,1)","line":{"color":"rgba(255,217,47,1)"}},"textfont":{"color":"rgba(255,217,47,1)"},"error_y":{"color":"rgba(255,217,47,1)"},"error_x":{"color":"rgba(255,217,47,1)"},"line":{"color":"rgba(255,217,47,1)"},"xaxis":"x","yaxis":"y","frame":null}],"highlight":{"on":"plotly_click","persistent":false,"dynamic":false,"selectize":false,"opacityDim":0.20000000000000001,"selected":{"opacity":1},"debounce":0},"shinyEvents":["plotly_hover","plotly_click","plotly_selected","plotly_relayout","plotly_brushed","plotly_brushing","plotly_clickannotation","plotly_doubleclick","plotly_deselect","plotly_afterplot","plotly_sunburstclick"],"base_url":"https://plot.ly"},"evals":[],"jsHooks":[]}</script>
 
 
 
-
+</div>
+</div>
 
 </div>
 
@@ -319,6 +440,35 @@ $(document).ready(function () {
 
 <!-- code folding -->
 
+<script>
+$(document).ready(function ()  {
+
+    // temporarily add toc-ignore selector to headers for the consistency with Pandoc
+    $('.unlisted.unnumbered').addClass('toc-ignore')
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_');
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
 <script>
