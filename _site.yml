@@ -5,7 +5,7 @@ navbar:
   right:
     - text: "About Me"
       href: experience.html
-    - text: "Codes for plots"
+    - text: "Project Codes"
       href: plot.html
     - text: "Dashboard"
       href: dashboard.html
