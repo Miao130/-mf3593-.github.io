@@ -1,12 +1,43 @@
 ---
-title: "Experience"
+title: "My Background"
 output: 
   html_document:
     toc: true
     toc_float: true
 ---
-Hi, I am a first year Master's student at Columbia University Mailman School of Public Health studying Biostatistics.
 
+
+Hi, I am a first year Master's student at Columbia University Mailman School of Public Health studying Biostatistics. I am interested in using data-driven techniques to study public health related topics. I wish to pursue a career in statistical analysis in biotechnology industry in the future. :)
+
+## Work Experience
+I worked at the Johns Hopkins Hospital as a research coordinator from 2022 to 2023 for one year in Baltimore, Maryland. My work duties mainly included:\
+ - REDCAP database management\
+ - IRB documentations \
+ - Patients recruitment on site\
+
+## Educational Experience
+I graduated from Johns Hopkins University in 2022 with a Bachelor's degree in Molecular Cellular Biology. My primary coursework include:\
+ - Molecular Biology\
+ - Organic Chemistry\
+ - Neuroscience\
+ - Genetics\
+
+I enrolled in Master's of Science in Biostatistics at Columbia University in 2023 with a concentration in public health data science.\
+My primary courseworks include:\
+ - Biostatistical Methods\
+ - Data Science\
+ - Survival Analaysis\
+ - Probability\
+
+## Skills
+I obtained the following skills from my educational and work experiences:\
+ - R Studio\
+ - SAS\
+ - Github\
+ - REDCAP\
+ - Clinical Research\
+
+## Additional Information\
 If you want to know more about my professional experience, here is my resume:
 [Resume](Miao Fu Resume.pdf)\
 Here is my linkedln:
