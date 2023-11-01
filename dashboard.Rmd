@@ -5,6 +5,9 @@ output:
     orientation: columns
     vertical_layout: fill
     embed: source
+    navbar:
+      - { title: "Home", href: "index.html", align: right }
+      - { title: "About me", href: "experience.html", align: right }
 ---
 
 ```{r setup, include=FALSE}
